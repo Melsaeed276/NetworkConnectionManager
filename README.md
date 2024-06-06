@@ -82,5 +82,6 @@ class SomeViewController: UIViewController, InternetConnectionDelegate {
     }
 }
 ```
+## License 
 
-
+[MIT License](LICENSE)
