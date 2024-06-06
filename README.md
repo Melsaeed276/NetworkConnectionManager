@@ -1,3 +1,5 @@
+[![Stand With Palestine](https://raw.githubusercontent.com/TheBSD/StandWithPalestine/main/banner-no-action.svg)](https://thebsd.github.io/StandWithPalestine)
+
 # NetworkManager
 
 NetworkManager is an iOS library for monitoring network connectivity status and quality. It allows you to easily detect when the device is connected or disconnected from the internet, as well as assess the quality of the connection.
