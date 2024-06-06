@@ -17,7 +17,7 @@ NetworkManager is an iOS library for monitoring network connectivity status and 
 You can integrate NetworkManager into your Xcode project using Swift Package Manager. Follow the steps below:
 
 1. In Xcode, go to `File` -> `Add Packages...`.
-2. Enter the URL of the repository: `https://github.com/yourusername/NetworkManager`.
+2. Enter the URL of the repository: [https://github.com/Malsaeed276/NetworkManager](https://github.com/Malsaeed276/NetworkConnectionManager).
 3. Follow the prompts to complete the installation.
 
 ## Usage
