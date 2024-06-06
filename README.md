@@ -22,6 +22,33 @@ You can integrate NetworkManager into your Xcode project using Swift Package Man
 
 ### Step 1: Implementing `InternetConnectionDelegate`
 
+
+## Using for SwiftUI 
+In your exist code after import the NetworkConnection Library you can just call it in that way 
+
+Example usage:
+```swift
+
+import SwiftUI
+import NetworkConnection
+
+struct ContentView: View {
+    
+    var body: some View {
+        VStack {
+         // your code
+    }
+    .showInternetAlert(
+         onCancel:{
+             print("ON Cancel called")
+             exit(0)
+         }) // End of the showInternetAlert
+     }
+```
+    
+    
+
+## Using for UIKit 
 Create a class or view controller that implements the `InternetConnectionDelegate` protocol to receive updates about network status and quality.
 
 ```swift
@@ -29,27 +56,31 @@ import UIKit
 import NetworkManager
 
 class SomeViewController: UIViewController, InternetConnectionDelegate {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         NetworkStatusController.shared.addDelegate(self)
     }
-    
+
     deinit {
         NetworkStatusController.shared.removeDelegate(self)
     }
-    
+
     func internetConnectionStatusDidChange(connected: Bool) {
         if connected {
             dismissInternetAlert()
         } else {
             showInternetAlert {
                 print("Internet alert canceled")
+                //you code 
             }
         }
     }
-    
+
     func internetConnectionQualityDidChange(quality: NetworkStatusController.ConnectionQuality) {
         // Handle quality changes if needed
     }
 }
+```
+
+
