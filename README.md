@@ -53,3 +53,7 @@ class SomeViewController: UIViewController, InternetConnectionDelegate {
         // Handle quality changes if needed
     }
 }
+```
+## License 
+
+[MIT License](LICENSE)
