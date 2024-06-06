@@ -5,17 +5,24 @@ import PackageDescription
 
 let package = Package(
     name: "NetworkConnection",
+    defaultLocalization: "en",
+    platforms: [
+        .iOS(.v15),
+        .macOS(.v11)
+        ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "NetworkConnection",
             targets: ["NetworkConnection"]),
     ],
+   
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "NetworkConnection"),
+            name: "NetworkConnection",
+            resources: [
+                //.process("Localizable.xcstrings")
+            ]
+        ),
         .testTarget(
             name: "NetworkConnectionTests",
             dependencies: ["NetworkConnection"]),

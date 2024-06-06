@@ -14,64 +14,30 @@ import SwiftUI
 
 
 
+struct InternetAlert: View {
+    
+    @Environment(\.openURL) private var openURL
+    
+    let onCancel: () -> Void
+    
+    
+    let image: String = "wifi.exclamationmark"
+    
 
-public struct InternetAlert: View {
-    @Environment(\.presentationMode) var presentationMode
+    init(onCancel: @escaping () -> Void){
+ 
+        
+        self.onCancel = onCancel
+    }
     
-    let image : String
-   
     
-    
-    let primaryButtonTitle: String?
-    let primaryButtonAction: () -> Void
-    
-    let secondaryButtonTitle: String?
-    let secondaryButtonAction: () -> Void
-    
-//     init(image: String,
-//         primaryButtonTitle: String?,
-//         primaryButtonAction: @escaping () -> Void,
-//         
-//         secondaryButtonTitle: String?,
-//         secondaryButtonAction: @escaping () -> Void
-//    ) {
-//        self.image = image
-//        
-//        self.secondaryButtonTitle = secondaryButtonTitle
-//        self.primaryButtonTitle = primaryButtonTitle
-//        self.primaryButtonAction = primaryButtonAction
-//        self.secondaryButtonAction = secondaryButtonAction
-//    }
-//    
-//    init(
-//        image: String,
-//        primaryButtonTitle: String?,
-//        primaryButtonAction: @escaping () -> Void) {
-//        self.image = image
-//
-//     
-//        self.primaryButtonTitle = primaryButtonTitle
-//        self.primaryButtonAction = primaryButtonAction
-//            
-//            self.secondaryButtonTitle = nil
-//            self.secondaryButtonAction = {}
-//            
-//          
-//    }
-//
-//    init(image: String) {
-//        self.image = image
-//        self.secondaryButtonTitle = "ok"
-//        self.primaryButtonTitle = nil
-//        self.primaryButtonAction = {}
-//        self.secondaryButtonAction = {}
-//    }
     
     var body: some View {
         
         ZStack {
-            Color(.white)
-                .opacity(0.1)
+            Color.black.opacity(0.4)
+                           .ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 // Add a VStack to arrange elements vertically
                 VStack{
@@ -81,19 +47,19 @@ public struct InternetAlert: View {
                         .foregroundColor(.red) // Optional color
                         .padding(.bottom)
                     
-                    Text("title")
+                    Text("Internet Connection".localized())
                         .fontWeight(.bold) // Make the text bold
                         .colorMultiply(.black)
                         .font(.title2)
                         .padding(.bottom,10)
-                      
-                    Text("description")
+                    
+                    Text("description".localized())
                         .colorMultiply(.black)
                         .padding(.horizontal,18)
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
-            
-
+                    
+                    
                 }.frame(maxWidth: .infinity,maxHeight: 200)
                     .padding(.top, 24)
                     .padding(.bottom,24)
@@ -101,24 +67,34 @@ public struct InternetAlert: View {
                 // Buttons
                 HStack (spacing: 20){ // Use an HStack for horizontal button placement
                     // Add buttons
-                    if(primaryButtonTitle != nil){
-                        Button(primaryButtonTitle!,action: primaryButtonAction)
-                        .padding(.horizontal,24)
-                        .padding(.vertical,12)
-                        .frame( maxWidth: secondaryButtonTitle == nil ? 300: nil)
-                        .background(Color(uiColor: .blue))
-                        .foregroundColor(.white) // Ensure text is visible
-                        .cornerRadius(8)
-                        
-                    }
+                    
+                    Button("Open Settings".localized(),action:{
+                        if let url = URL(string:"App-Prefs:root=WIFI") {
+                            if UIApplication.shared.canOpenURL(url) {
+                                if #available(iOS 10.0, *) {
+                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                } else {
+                                    UIApplication.shared.openURL(url)
+                                }
+                            }
+                        }
+                    })
+                    .padding(.horizontal,24)
+                    .padding(.vertical,12)
+                    .frame( minWidth: 120)
+                    .background(Color(uiColor: .blue))
+                    .foregroundColor(.white) // Ensure text is visible
+                    .cornerRadius(8)
                     
                     
-                    if(secondaryButtonTitle != nil){
-                        Button(secondaryButtonTitle!,action: secondaryButtonAction )
+                    
+                    
+                    
+                    Button("Cancel".localized(),action:  onCancel)
                         .colorMultiply(.black)
                         .buttonStyle(.borderless)
-                    }
-    
+                    
+                    
                 }
                 .padding(.bottom, 24)
             }
@@ -126,49 +102,20 @@ public struct InternetAlert: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 20)
             .padding(.horizontal,20)
-
+            
         }
         .ignoresSafeArea()
-       
+        
     }
     
     
 }
 
+
+
 #Preview("Englsh"){
-    InternetAlert(
-        image: "wifi.exclamationmark",
-      
-        primaryButtonTitle: "go_to_settings",
-        primaryButtonAction: {
-
-            
-        },
-        
-        secondaryButtonTitle: "close_app",
-        secondaryButtonAction: {
-           
-        }
-        
-    )
-    .environment(\.locale, .init(identifier: "EN"))
-
+    InternetAlert(onCancel:{})
+        .environment(\.locale, .init(identifier: "en"))
+    
 }
 
-#Preview("Turkish"){
-    InternetAlert(
-        image: "wifi.exclamationmark",
-        primaryButtonTitle: "go_to_settings",
-        primaryButtonAction: {
-
-            
-        },
-        
-        secondaryButtonTitle: "close_app",
-        secondaryButtonAction: {
-           
-        }
-        
-    )
-    .environment(\.locale, Locale(identifier: "TR"))
-}
