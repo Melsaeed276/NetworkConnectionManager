@@ -9,20 +9,22 @@ let package = Package(
     platforms: [
         .iOS(.v15),
         .macOS(.v11)
-        ],
+    ],
     products: [
         .library(
             name: "NetworkConnection",
             targets: ["NetworkConnection"]),
     ],
-   
+
     targets: [
         .target(
             name: "NetworkConnection",
-            resources: [
-                //.process("Localizable.xcstrings")
+            resources: [],
+            swiftSettings: [
+                .enableUpcomingFeature("LibraryEvolution")
             ]
         ),
+
         .testTarget(
             name: "NetworkConnectionTests",
             dependencies: ["NetworkConnection"]),
