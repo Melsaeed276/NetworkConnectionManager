@@ -89,10 +89,12 @@ public protocol InternetConnectionDelegate: AnyObject {
 public class NetworkStatusController: ObservableObject {
     public static let shared = NetworkStatusController()
     
-    public static var isEnable: Bool = true
+  
     
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "NetworkMonitor")
+    
+    @Published public var isEnable: Bool = true 
     
     @Published public private(set) var isConnected = false
     @Published public private(set) var isExpensive = false
@@ -179,39 +181,45 @@ public class NetworkStatusController: ObservableObject {
     
     private init() {
         
-        if NetworkStatusController.isEnable {
-            monitor.pathUpdateHandler = { [weak self] path in
-                DispatchQueue.main.async {
-                    let connected = path.status == .satisfied
-                    let expensive = path.isExpensive
-                    
-                    if (connected){
-                        // Check for actual internet connectivity
-                        self?.checkInternetConnection(isReachable: connected) { isConnected, quality in
-                            self?.isConnected = isConnected
-                            self?.isExpensive = expensive
-                            self?.connectionQuality = quality
-                            self?.notifyDelegates(connected: isConnected, quality: quality)
-                            self?.statusChangeHandler?(isConnected, expensive)
-                        }
-                    }else{
-                        self?.notifyDelegates(connected: connected, quality: .none)
-                        self?.statusChangeHandler?(connected, expensive)
+        monitor.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async {
+                let connected = path.status == .satisfied
+                let expensive = path.isExpensive
+                
+                if connected {
+
+                    // Check for actual internet connectivity
+                    self?.checkInternetConnection(isReachable: connected) { isConnected, quality in
+                        self?.isConnected = isConnected
+                        self?.isExpensive = expensive
+                        self?.connectionQuality = quality
+                        self?.notifyDelegates(connected: isConnected, quality: quality)
+                        self?.statusChangeHandler?(isConnected, expensive)
                     }
-                   
-                    
+                } else {
+                    self?.notifyDelegates(connected: connected, quality: .none)
+                    self?.statusChangeHandler?(connected, expensive)
                 }
             }
-            monitor.start(queue: queue)
-        }else {
-            self.isConnected = true
-            self.isExpensive = false
         }
-      
+        monitor.start(queue: queue)
+        
     }
     
     private func checkInternetConnection(isReachable: Bool, completion: @escaping (Bool, ConnectionQuality) -> Void) {
-        guard isReachable else {
+        
+        
+        // Check if the network check is enabled
+        if isEnable == false  {
+            isConnected = true // Set isConnected to true directly
+            connectionQuality = .none
+            isExpensive = false
+            
+            completion(true, .good) // Return a successful connection if disabled
+            return
+        }
+        
+        if isReachable == false {
             completion(false, .none) // No network, definitely no internet
             return
         }
