@@ -236,7 +236,6 @@ public class NetworkStatusController: ObservableObject {
                    200..<300 ~= httpResponse.statusCode {
                     let duration = Date().timeIntervalSince(startTime)
                     
-                    print("duration: \(duration)")
                     let quality: ConnectionQuality
                     if duration < 1.2 {
                         quality = .good
